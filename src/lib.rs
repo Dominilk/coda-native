@@ -27,5 +27,5 @@ pub struct NativeBind {
     /// The name/identifier of the [NativeBind].
     pub name: String,
     /// The function handling the interfacing.
-    pub handler: fn(Vec<CodaValue>) -> ControlFlowImpact
+    pub handler: fn(Vec<CodaValue>) -> Option<ControlFlowImpact>
 }
