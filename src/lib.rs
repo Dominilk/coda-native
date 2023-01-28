@@ -4,7 +4,7 @@ use std::fmt;
 
 /// Enum holding all native coda values.
 #[derive(Debug, Clone, PartialEq)]
-pub enum CodaValue {
+pub enum NativeValue {
     Character(char),
     Long(i128),
     Integer(i32),
@@ -14,7 +14,7 @@ pub enum CodaValue {
     String(String)
 }
 
-impl fmt::Display for CodaValue {
+impl fmt::Display for NativeValue {
 
     fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
         match self {
@@ -33,7 +33,7 @@ impl fmt::Display for CodaValue {
 /// Enum containing all possible control-flow impacts a [NativeBind] could have.
 #[derive(Debug, Clone, PartialEq)]
 pub enum ControlFlowImpact {
-    Return(CodaValue),
+    Return(NativeValue),
     Break,
     Continue
 }
@@ -45,5 +45,5 @@ pub struct NativeBind {
     /// The name/identifier of the [NativeBind].
     pub name: String,
     /// The function handling the interfacing.
-    pub handler: fn(Vec<CodaValue>) -> Option<ControlFlowImpact>
+    pub handler: fn(Vec<NativeValue>) -> Option<ControlFlowImpact>
 }
