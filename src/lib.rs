@@ -1,7 +1,7 @@
 //! This is the coda programming language native crate. Coda is a modern, general purpose programming language.
 
 /// Enum holding all native coda values.
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, PartialEq)]
 pub enum CodaValue {
     Character(char),
     Long(i128),
@@ -13,7 +13,7 @@ pub enum CodaValue {
 }
 
 /// Enum containing all possible control-flow impacts a [NativeBind] could have.
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, PartialEq)]
 pub enum ControlFlowImpact {
     Return(CodaValue),
     Break,
@@ -22,7 +22,7 @@ pub enum ControlFlowImpact {
 
 /// Struct representing a coda native-bind, offering an interface between
 /// coda code and rust-compiled native code.
-#[derive(Debug, Clone, Hash)]
+#[derive(Debug, Clone, Hash, PartialEq)]
 pub struct NativeBind {
     /// The name/identifier of the [NativeBind].
     pub name: String,
