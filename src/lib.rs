@@ -22,7 +22,7 @@ pub enum ControlFlowImpact {
 
 /// Struct representing a coda native-bind, offering an interface between
 /// coda code and rust-compiled native code.
-#[derive(Debug, Clone, Hash, PartialEq)]
+#[derive(Debug, Clone, Hash, PartialEq, Eq)]
 pub struct NativeBind {
     /// The name/identifier of the [NativeBind].
     pub name: String,
