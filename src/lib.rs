@@ -50,11 +50,8 @@ pub struct NativeBind {
 }
 
 /// Loads all [NativeBind]s contained in the library at the specified path.
-/// # Safety
-/// Loading [NativeBind]s is inherently unsafe.
-/// Refer to [dlopen] for more documentation.
-pub unsafe fn load_binds(name: impl AsRef<OsStr>) -> Result<Vec<NativeBind>, dlopen::Error> {
+pub fn load_binds(name: impl AsRef<OsStr>) -> Result<Vec<NativeBind>, dlopen::Error> {
     let library = dlopen::symbor::Library::open(name)?;
 
-    Ok(library.symbol::<fn() -> Vec<NativeBind>>("bootstrap")?())
+    Ok(unsafe { library.reference::<fn() -> Vec<NativeBind>>("bootstrap")?() })
 }
