@@ -1,6 +1,7 @@
 //! This is the coda programming language native crate. Coda is a modern, general purpose programming language.
 
 use std::fmt;
+use std::ffi::OsStr;
 
 /// Enum holding all native coda values.
 #[derive(Debug, Clone, PartialEq)]
@@ -45,5 +46,15 @@ pub struct NativeBind {
     /// The name/identifier of the [NativeBind].
     pub name: String,
     /// The function handling the interfacing.
-    pub handler: fn(Vec<NativeValue>) -> Option<ControlFlowImpact>
+    pub handler: fn(Vec<NativeValue>) -> Option<ControlFlowImpact> // TODO: Consider changing to &NativeValue
+}
+
+/// Loads all [NativeBind]s contained in the library at the specified path.
+/// # Safety
+/// Loading [NativeBind]s is inherently unsafe.
+/// Refer to [dlopen] for more documentation.
+pub unsafe fn load_binds(name: impl AsRef<OsStr>) -> Result<Vec<NativeBind>, dlopen::Error> {
+    let library = dlopen::symbor::Library::open(name)?;
+
+    Ok(library.symbol::<fn() -> Vec<NativeBind>>("bootstrap")?())
 }
