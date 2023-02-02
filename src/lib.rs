@@ -54,5 +54,5 @@ pub struct NativeBind {
 pub fn load_binds(name: impl AsRef<OsStr>) -> Result<HashSet<NativeBind>, dlopen::Error> {
     let library = dlopen::symbor::Library::open(name)?;
 
-    Ok(unsafe { library.reference::<fn() -> HashSet<NativeBind>>("bootstrap")?() })
+    Ok(unsafe { library.symbol::<fn() -> HashSet<NativeBind>>("bootstrap")? }())
 }
