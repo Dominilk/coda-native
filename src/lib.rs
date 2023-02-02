@@ -1,8 +1,8 @@
 //! This is the coda programming language native crate. Coda is a modern, general purpose programming language.
 
-use std::collections::HashSet;
 use std::fmt;
 use std::ffi::OsStr;
+
 
 /// Enum holding all native coda values.
 #[derive(Debug, Clone, PartialEq)]
@@ -51,8 +51,8 @@ pub struct NativeBind {
 }
 
 /// Loads all [NativeBind]s contained in the library at the specified path.
-pub fn load_binds(name: impl AsRef<OsStr>) -> Result<HashSet<NativeBind>, dlopen::Error> {
+pub fn load_binds(name: impl AsRef<OsStr>) -> Result<Vec<NativeBind>, dlopen::Error> { // TODO: Consider using HashMap<name, bind>
     let library = dlopen::symbor::Library::open(name)?;
-
-    Ok(unsafe { library.symbol::<fn() -> HashSet<NativeBind>>("bootstrap")? }())
+    
+    Ok(unsafe { library.symbol::<fn() -> Vec<NativeBind>>("bootstrap")? }())
 }
