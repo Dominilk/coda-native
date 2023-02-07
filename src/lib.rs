@@ -57,6 +57,8 @@ pub enum BindLoadError {
     DlOpen(dlopen::Error)
 }
 
+impl std::error::Error for BindLoadError {}
+
 impl From<dlopen::Error> for BindLoadError {
     fn from(error: dlopen::Error) -> Self {
         Self::DlOpen(error)
