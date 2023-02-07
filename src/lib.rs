@@ -45,13 +45,13 @@ pub enum ControlFlowImpact {
 #[derive(Debug, Clone, Hash, PartialEq, Eq)]
 pub struct NativeBind {
     /// The name/identifier of the [NativeBind].
-    pub name: String,
+    pub name: &'static str,
     /// The function handling the interfacing.
     pub handler: fn(Vec<NativeValue>) -> Option<ControlFlowImpact> // TODO: Consider changing to &NativeValue
 }
 
 /// Loads all [NativeBind]s contained in the library at the specified path.
-pub fn load_binds(name: impl AsRef<OsStr>) -> Result<Vec<NativeBind>, dlopen::Error> { // TODO: Consider using HashMap<name, bind>
+pub fn load_binds(name: impl AsRef<OsStr>) -> Result<Vec<NativeBind>, dlopen::Error> {
     let library = dlopen::symbor::Library::open(name)?;
     
     Ok(unsafe { library.symbol::<fn() -> Vec<NativeBind>>("bootstrap")? }())
