@@ -50,8 +50,32 @@ pub struct NativeBind {
     pub handler: fn(Vec<NativeValue>) -> Option<ControlFlowImpact> // TODO: Consider changing to &NativeValue
 }
 
+/// Struct representing an error occured when trying to load [NativeBind]s.
+#[derive(Debug)]
+pub enum BindLoadError {
+    Simple(&'static str),
+    DlOpen(dlopen::Error)
+}
+
+impl From<dlopen::Error> for BindLoadError {
+    fn from(error: dlopen::Error) -> Self {
+        Self::DlOpen(error)
+    }
+}
+
+impl fmt::Display for BindLoadError {
+    fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
+        formatter.write_str("BindLoadError: ")?;
+        
+        match self {
+            Self::Simple(message) => formatter.write_str(message),
+            Self::DlOpen(error) => fmt::Display::fmt(error, formatter)
+        }
+    }
+}
+
 /// Loads all [NativeBind]s contained in the library at the specified path.
-pub fn load_binds(name: impl AsRef<OsStr>) -> Result<Vec<NativeBind>, dlopen::Error> {
+pub fn load_binds(name: impl AsRef<OsStr>) -> Result<Vec<NativeBind>, BindLoadError> {
     let library = dlopen::symbor::Library::open(name)?;
     
     Ok(unsafe { library.symbol::<fn() -> Vec<NativeBind>>("bootstrap")? }())
